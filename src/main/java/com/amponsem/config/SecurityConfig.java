@@ -29,7 +29,6 @@ public class SecurityConfig {
                 )
                          .httpBasic(withDefaults())
                          .formLogin(withDefaults())
-       //
                          .build();
     }
 
