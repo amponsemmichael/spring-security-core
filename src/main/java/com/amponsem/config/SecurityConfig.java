@@ -23,8 +23,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import javax.sql.DataSource;
 
-
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -44,11 +42,17 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorizeRequests ->
                 authorizeRequests.requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/signin").permitAll()
                         .anyRequest().authenticated())
-        .sessionManagement(
+                        .formLogin(formLogin -> formLogin.loginPage("/login")
+                        .permitAll()
+                )
+                .httpBasic(httpBasic -> httpBasic.authenticationEntryPoint(unauthorizedHandler))
+
+                .sessionManagement(
                 session ->
                         session.sessionCreationPolicy(
                                 SessionCreationPolicy.STATELESS)
@@ -60,7 +64,6 @@ public class SecurityConfig {
                 .frameOptions(frameOptions -> frameOptions.sameOrigin())
         );
 
-        http.csrf(csrf -> csrf.disable());
         http.addFilterBefore(authenticationJwtTokenFilter(),
                 UsernamePasswordAuthenticationFilter.class);
 
