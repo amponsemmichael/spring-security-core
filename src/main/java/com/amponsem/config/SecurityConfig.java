@@ -46,9 +46,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests ->
                 authorizeRequests.requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/signin").permitAll()
-                        .anyRequest().authenticated())
-                        .formLogin(formLogin -> formLogin.loginPage("/login")
-                        .permitAll()
+                        .anyRequest().authenticated()
                 )
                 .httpBasic(httpBasic -> httpBasic.authenticationEntryPoint(unauthorizedHandler))
 
